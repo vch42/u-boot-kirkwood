@@ -98,25 +98,66 @@
  * Default environment variables
  */
 #define CONFIG_BOOTCOMMAND \
-	"echo 'Type help to get a list of available commands.'"
+	"nand read.e 0x2000000 $(kernel_addr) 0xA00000; bootm 0x2000000"
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"console=ttyS0,115200\0" \
+	"bootargs=console=ttyS0,115200 mtdparts=nand_mtd:0x100000(uboot),0x80000(uboot_env),0x80000(key_store),0x80000(info),0xA00000(etc),0xA00000(kernel_1),0x2FC0000(rootfs1),0xA00000(kernel_2),0x2FC0000(rootfs2) root=/dev/nfs rw init=/init\0" \
+	"bootdelay=2\0" \
 	"baudrate=115200\0" \
-	"bootdelay=10\0" \
-	"led_error=orange blinking\0" \
-	"led_exit=green off\0" \
-	"led_init=green blinking\0" \
-	"mtdids=nand0=orion_nand\0" \
-	"mtdparts=mtdparts=orion_nand:0x100000(uboot),0x80000(stock_uboot_env),0x80000(key_store)," \
-	"0x80000(info),0xA00000(etc),0xA00000(kernel_1),0x2FC0000(rootfs1),0xA00000(kernel_2),0x2FC0000(rootfs2)\0"\
-	"partition=nand0,2\0" \
-	"stderr=serial\0" \
+	"loads_echo=0\0" \
+	"run_diag=yes\0" \
+	"eth1addr=00:19:CB:00:51:82\0" \
+	"ipaddr=10.4.50.165\0" \
+	"serverip=10.4.50.5\0" \
+	"netmask=255.255.255.0\0" \
+	"rootpath=/mnt/ARM_FS/\0" \
+	"nandEcc=1bit\0" \
+	"MODEL_ID=DD01\0" \
+	"PRODUCT_NAME=NSA-320\0" \
+	"FEATURE_BIT=00\0" \
+	"CONTRY_TYPE=FF\0" \
+	"VENDOR_NAME=ZyXEL Communications Corp.\0" \
+	"ethaddr=00:19:CB:00:51:81\0" \
 	"stdin=serial\0" \
 	"stdout=serial\0" \
-	"ethact=egiga0\0" \
-	"ethaddr=00:19:cb:00:51:81\0" \
-	"arcNumber=3956"
+	"stderr=serial\0" \
+	"console=console=ttyS0,115200 mtdparts=nand_mtd:0xc0000@0(uboot)ro,0x7f00000@0x100000(root)\0" \
+	"mainlineLinux=no\0" \
+	"CASset=min\0" \
+	"enaMonExt=no\0" \
+	"enaCpuStream=no\0" \
+	"enaWrAllo=no\0" \
+	"pexMode=RC\0" \
+	"disL2Cache=no\0" \
+	"setL2CacheWT=yes\0" \
+	"disL2Prefetch=yes\0" \
+	"enaICPref=yes\0" \
+	"enaDCPref=yes\0" \
+	"sata_dma_mode=yes\0" \
+	"ethprime=egiga1\0" \
+	"netbsd_en=no\0" \
+	"vxworks_en=no\0" \
+	"bootargs_root=root=/dev/nfs rw\0" \
+	"bootargs_end=:::DB88FXX81:eth0:none\0" \
+	"image_name=uImage\0" \
+	"standalone=fsload 0x2000000 $(image_name);setenv bootargs $(console) root=/dev/mtdblock0 rw ip=$(ipaddr):$(serverip)$(bootargs_end) $(mvPhoneConfig); bootm 0x2000000;\0" \
+	"disaMvPnp=no\0" \
+	"ethmtu=1500\0" \
+	"eth1mtu=1500\0" \
+	"mvPhoneConfig=mv_phone_config=dev0:fxs,dev1:fxs\0" \
+	"mvNetConfig=mv_net_config=(00:11:88:0f:62:81,0:1:2:3),mtu=1500\0" \
+	"usb0Mode=host\0" \
+	"yuk_ethaddr=00:00:00:EE:51:81\0" \
+	"hddPowerCtrl=no\0" \
+	"netretry=no\0" \
+	"rcvrip=169.254.100.100\0" \
+	"loadaddr=0x02000000\0" \
+	"autoload=no\0" \
+	"enaAutoRecovery=yes\0" \
+	"pcieTune=no\0" \
+	"ethact=egiga1\0" \
+	"kernel_addr=0xc80000"
+
 /*
  * Ethernet Driver configuration
  */
