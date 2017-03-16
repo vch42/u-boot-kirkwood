@@ -98,50 +98,24 @@
  * Default environment variables
  */
 #define CONFIG_BOOTCOMMAND \
-	"run bootcmd_uenv; run bootcmd_usb; usb stop; run bootcmd_sata; reset" 
+	"echo 'Type help to get a list of available commands.'"
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"console=console=ttyS0,115200\0" \
-	"arcNumber=3956\0" \
-	"baudrate=115200\0" \
-	"bootcmd_sata=run sata_init; run set_bootargs_sata; run sata_boot\0" \
-	"bootcmd_usb=run usb_init; run set_bootargs_usb; run usb_boot\0" \
-	"bootdelay=10\0" \
 	"console=ttyS0,115200\0" \
-	"device=0:1\0" \
-	"ethact=egiga0\0" \
-	"ethaddr=b6:d0:5e:0f:a1:17\0" \
-	"led_error=orange blinking\0" \
+	"baudrate=115200\0" \
+	"bootdelay=10\0" \
+    "led_error=orange blinking\0" \
 	"led_exit=green off\0" \
 	"led_init=green blinking\0" \
-	"machid=118f\0" \
-	"mainlineLinux=yes\0" \
 	"mtdids=nand0=orion_nand\0" \
 	"mtdparts=mtdparts=orion_nand:0x100000(uboot),0x80000(stock_uboot_env),0x80000(key_store)," \
 	"0x80000(info),0xA00000(etc),0xA00000(kernel_1),0x2FC0000(rootfs1),0xA00000(kernel_2),0x2FC0000(rootfs2)\0"\
 	"partition=nand0,2\0" \
-	"rootdelay=10\0" \
-	"rootfstype=ext2\0" \
-	"sata_boot=mw 0x800000 0 1; run sata_load_uimage; if run sata_load_uinitrd; then bootm 0x800000 0x1100000; else bootm 0x800000; fi\0" \
-	"sata_init=ide reset\0" \
-	"sata_load_uimage=ext2load ide $device 0x800000 /boot/uImage\0" \
-	"sata_load_uinitrd=ext2load ide $device 0x1100000 /boot/uInitrd\0" \
-	"sata_root=/dev/sda1\0" \
-	"set_bootargs_sata=setenv bootargs console=$console root=$sata_root rootdelay=$rootdelay rootfstype=$rootfstype $mtdparts\0" \
-	"set_bootargs_usb=setenv bootargs console=$console root=$usb_root rootdelay=$rootdelay rootfstype=$rootfstype $mtdparts\0" \
 	"stderr=serial\0" \
 	"stdin=serial\0" \
 	"stdout=serial\0" \
-	"usb_boot=mw 0x800000 0 1; run usb_load_uimage; if run usb_load_uinitrd; then bootm 0x800000 0x1100000; else bootm 0x800000; fi\0" \
-	"usb_init=usb start\0" \
-	"usb_load_uimage=ext2load usb $device 0x800000 /boot/uImage\0" \
-	"usb_load_uinitrd=ext2load usb $device 0x1100000 /boot/uInitrd\0" \
-	"usb_root=/dev/sda1\0" \
-	"bootcmd_uenv=run uenv_load; if test $uenv_loaded -eq 1; then run uenv_import; fi\0" \
-	"uenv_import=echo importing envs ...; env import -t 0x810000\0" \
-	"uenv_load=usb start; setenv uenv_loaded 0; for devtype in usb; do for disknum in 0; do run uenv_read_disk; done; done\0" \
-	"uenv_read=echo loading envs from $devtype $disknum ...; if load $devtype $disknum:1 0x810000 /boot/uEnv.txt; then setenv uenv_loaded 1; fi\0" \
-	"uenv_read_disk=if $devtype part $disknum; then run uenv_read; fi"
+	"ethact=egiga0\0" \
+    "ethaddr=00:19:cb:00:51:81"
 
 /*
  * Ethernet Driver configuration
