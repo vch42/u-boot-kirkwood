@@ -118,7 +118,8 @@
 	"stdin=serial\0" \
 	"stdout=serial\0" \
 	"ethact=egiga0\0" \
-	"ethaddr=00:19:cb:00:51:81"
+	"ethaddr=00:19:cb:00:51:81\0" \
+	"arcNumber=4495"
 
 /*
  * Ethernet Driver configuration
