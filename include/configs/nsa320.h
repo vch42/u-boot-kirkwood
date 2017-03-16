@@ -101,7 +101,7 @@
 	"mw 0x800000 0 1; run set_init_devices; run scan_disk; run bootcmd_uenv; run set_bootargs; run bootcmd_exec; sleep 5; reset"
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"arcNumber=3956"
+	"arcNumber=3956\0" \
 	"preboot=setenv stderr serial; setenv stdin serial; setenv stdout serial; setenv baudrate 115200; setenv console ttyS0,$baudrate; setenv bootdelay 10\0" \
 	"stderr=serial\0" \
 	"stdin=serial\0" \
