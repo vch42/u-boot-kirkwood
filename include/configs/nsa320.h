@@ -104,7 +104,7 @@
 	"console=ttyS0,115200\0" \
 	"baudrate=115200\0" \
 	"bootdelay=10\0" \
-    "led_error=orange blinking\0" \
+	"led_error=orange blinking\0" \
 	"led_exit=green off\0" \
 	"led_init=green blinking\0" \
 	"mtdids=nand0=orion_nand\0" \
@@ -115,7 +115,7 @@
 	"stdin=serial\0" \
 	"stdout=serial\0" \
 	"ethact=egiga0\0" \
-    "ethaddr=00:19:cb:00:51:81"
+	"ethaddr=00:19:cb:00:51:81"
 
 /*
  * Ethernet Driver configuration
