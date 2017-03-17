@@ -78,70 +78,83 @@
 #define CONFIG_SYS_PROMPT	"NSA310> "	/* Command Prompt */
 
 /*
- * Environment variables configurations
+ *  Environment variables configurations
  */
-#ifdef CONFIG_CMD_NAND
-#define CONFIG_ENV_IS_IN_NAND           1
-#define CONFIG_ENV_SECT_SIZE            0x20000         /* 128K */
-#else
-#define CONFIG_ENV_IS_NOWHERE           1               /* if env in SDRAM */
-#endif
-
-/* max 4k env size is enough, but in case of nand
+#define CONFIG_ENV_IS_NOWHERE		1		/* if env in SDRAM */
+/*
+ * max 4k env size is enough, but in case of nand
  * it has to be rounded to sector size
  */
-#define CONFIG_ENV_SIZE                 0x20000         /* 128k */
-#define CONFIG_ENV_ADDR                 0xc0000
-#define CONFIG_ENV_OFFSET               0xc0000 /* env starts here */
+#define CONFIG_ENV_SIZE			0x20000		/* 128k */
 
 /*
  * Default environment variables
  */
 #define CONFIG_BOOTCOMMAND \
-	"run bootcmd_uenv; run bootcmd_usb; usb stop; run bootcmd_sata; reset" 
+	"echo '==========================================================='; " \
+	"echo 'This u-boot makes restoring different firmware images easy.'; " \
+	"echo 'DO NOT FLASH TO NAND, ONLY FOR SERIAL BOOT WITH KWBOOT !!!'; " \
+	"echo 'More info here: http://fff.com/fffff' ; " \
+	"echo '==========================================================='; " \
+	"echo 'Commands:'; " \
+	"echo 'run flash.factory - will reflash factory firmware from USB'; " \
+	"echo '                    * /mtd folder must exist in USB drive root and'; " \
+	"echo '                      contain the mtd0 to mtd5 dumps'; " \
+	"echo '                    * Recovery files from Zyxel should also reside'; " \
+	"echo '                      in the USB drive root'; " \
+	"echo '                    * This command will flash all the parts and then'; " \
+	"echo '                      reboot in the stock u-boot/kernel'; " \
+	"echo '                    * During first stock boot, recovery files from USB'; " \
+	"echo '                      will be used to properly restore kernel and rootfs parts'; " \
+	"echo '                    * After first stock boot, issue the bellow command via serial '; " \
+	"echo '                      to restore correct MAC address: fw_setenv ethaddr [co:re:ct:ma:ca:dd]'; " \
+	"echo '                      The original MAC should be on a label on the back of the device chassis'; " \
+	"echo 'run flash.uboot - will flash uboot.img from USB'; " \
+	"echo '                   * /uboot.img must exist in USB drive root'; " \
+	"echo '                   * image will be written @0x00000000'; " \
+	"echo 'run flash.uenv  - will flash uenv.img  from USB'; " \
+	"echo '                   * /uenv.img must exist in USB drive root'; " \
+	"echo '                   * image will be written @0x000c0000'; " \
+	"echo 'help            - display u-boot help'; " \
+	"echo 'printenv        - display environment - readonly'; " \
+	"echo 'boot            - display this help again'; echo; " \
+	"echo '==========================================================='; " \
+	"echo '!!!!!!!!WARNING!!!!!!!!!WARNING!!!!!!!!!!WARNING!!!!!!!!!!!'; " \
+	"echo '==========================================================='; " \
+	"echo; " \
+	"echo '        Bellow are the bad blocks of this flash. '; " \
+	"echo '        DO NOT FLASH IF THERE ARE BAD BLOCKS'; " \
+	"echo '        BETWEEN 0x00000000 and 0x00100000 !!!'; " \
+	"nand bad; echo; " \
+	"echo '==========================================================='; echo "
+
 
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"console=console=ttyS0,115200\0" \
-	"arcNumber=4022\0" \
+	"bootdelay=0\0" \
 	"baudrate=115200\0" \
-	"bootcmd_sata=run sata_init; run set_bootargs_sata; run sata_boot\0" \
-	"bootcmd_usb=run usb_init; run set_bootargs_usb; run usb_boot\0" \
-	"bootdelay=10\0" \
-	"console=ttyS0,115200\0" \
-	"device=0:1\0" \
 	"ethact=egiga0\0" \
-	"ethaddr=b6:d0:5e:0f:a1:17\0" \
-	"led_error=orange blinking\0" \
-	"led_exit=green off\0" \
-	"led_init=green blinking\0" \
-	"machid=118f\0" \
-	"mainlineLinux=yes\0" \
+	"ethaddr=00:19:cb:00:51:81\0" \
 	"mtdids=nand0=orion_nand\0" \
 	"mtdparts=mtdparts=orion_nand:0x100000(uboot),0x80000(stock_uboot_env),0x80000(key_store)," \
 	"0x80000(info),0xA00000(etc),0xA00000(kernel_1),0x2FC0000(rootfs1),0xA00000(kernel_2),0x2FC0000(rootfs2)\0"\
-	"partition=nand0,2\0" \
-	"rootdelay=10\0" \
-	"rootfstype=ext2\0" \
-	"sata_boot=mw 0x800000 0 1; run sata_load_uimage; if run sata_load_uinitrd; then bootm 0x800000 0x1100000; else bootm 0x800000; fi\0" \
-	"sata_init=ide reset\0" \
-	"sata_load_uimage=ext2load ide $device 0x800000 /boot/uImage\0" \
-	"sata_load_uinitrd=ext2load ide $device 0x1100000 /boot/uInitrd\0" \
-	"sata_root=/dev/sda1\0" \
-	"set_bootargs_sata=setenv bootargs console=$console root=$sata_root rootdelay=$rootdelay rootfstype=$rootfstype $mtdparts\0" \
-	"set_bootargs_usb=setenv bootargs console=$console root=$usb_root rootdelay=$rootdelay rootfstype=$rootfstype $mtdparts\0" \
 	"stderr=serial\0" \
 	"stdin=serial\0" \
 	"stdout=serial\0" \
-	"usb_boot=mw 0x800000 0 1; run usb_load_uimage; if run usb_load_uinitrd; then bootm 0x800000 0x1100000; else bootm 0x800000; fi\0" \
-	"usb_init=usb start\0" \
-	"usb_load_uimage=ext2load usb $device 0x800000 /boot/uImage\0" \
-	"usb_load_uinitrd=ext2load usb $device 0x1100000 /boot/uInitrd\0" \
-	"usb_root=/dev/sda1\0" \
-	"bootcmd_uenv=run uenv_load; if test $uenv_loaded -eq 1; then run uenv_import; fi\0" \
-	"uenv_import=echo importing envs ...; env import -t 0x810000\0" \
-	"uenv_load=usb start; setenv uenv_loaded 0; for devtype in usb; do for disknum in 0; do run uenv_read_disk; done; done\0" \
-	"uenv_read=echo loading envs from $devtype $disknum ...; if load $devtype $disknum:1 0x810000 /boot/uEnv.txt; then setenv uenv_loaded 1; fi\0" \
-	"uenv_read_disk=if $devtype part $disknum; then run uenv_read; fi"
+	"init_usb=usb start\0" \
+	"flash.uboot=run init_usb; sleep 5; if load usb 0:1 0x0800000 uboot.img; then nand erase 0x0 0xc0000; nand write 0x0800000 0x0 0xc0000; fi \0" \
+	"flash.uenv=run init_usb; sleep 5; if load usb 0:1 0x0800000 uenv.img; then nand erase 0xc0000 0x20000; nand write 0x0800000 0xc0000 0x20000; fi \0" \
+	"flash.factory=run init_usb; sleep 5; " \
+	"if load usb 0:1 0xc80000 /mtd/mtd0; then " \
+	"nand erase.part uboot; nand write 0xc80000 uboot; " \
+	"if load usb 0:1 0xc80000 /mtd/mtd1; then nand erase.part stock_uboot_env; nand write 0xc80000 stock_uboot_env; fi; " \
+	"nand erase.part key_store; " \
+	"if load usb 0:1 0xc80000 /mtd/mtd3; then nand erase.part info; nand write 0xc80000 info; fi; " \
+	"nand erase.part etc; " \
+	"if load usb 0:1 0xc80000 /mtd/mtd5; then " \
+	"nand erase.part kernel_1; nand write 0xc80000 kernel_1; " \
+	"nand erase.part kernel_2; nand write 0xc80000 kernel_2; fi; " \
+	"nand erase.part rootfs1; nand erase.part rootfs2; reset; " \
+	"else echo '/mtd/mtd0 not found on USB drive!!!'; fi\0"
 
 /*
  * Ethernet Driver configuration
